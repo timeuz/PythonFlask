@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 
 class Jogo:
     def __init__(self, nome, categoria, console):
@@ -13,15 +13,15 @@ lista_jogos = [jogo1, jogo2, jogo3]
 
 app = Flask(__name__)
 
-@app.route('/inicio')
-def ola(): #função que define o que existe na route
+@app.route('/')
+def index(): #função que define o que existe na route
     return render_template('lista.html', titulo='Jogos', jogos=lista_jogos)
 
 @app.route('/novo')
 def novo():
     return render_template('novo.html', titulo='Novo Jogo')
 
-@app.route('/criar')
+@app.route('/criar', methods=['POST', ])
 def criar():
     #pega dados do form
     nome = request.form['nome']
@@ -34,7 +34,7 @@ def criar():
     #add dados à lista
     lista_jogos.append(jogo)
     
-    #mostrando dados da lista_jogos
-    return render_template('lista.html', titulo='Jogos', jogos=lista_jogos)
+    #redirecionando para pagina inicial com os dados já cadastrados
+    return redirect('/')
 
-app.run() # pode ser congigurado para outro host e porta: app.run(host='0.0.0.0', port=8080)
+app.run(debug=True) # pode ser congigurado para outro host e porta: app.run(host='0.0.0.0', port=8080)
